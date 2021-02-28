@@ -1,4 +1,4 @@
-FROM ubuntu:latest as binkd-builder
+FROM ubuntu:20.04 as binkd-builder
 
 WORKDIR /binkd
 #COPY . /binkd
@@ -10,7 +10,7 @@ RUN apt update && apt upgrade -y \
   && ./configure \
   && make -j$(getconf _NPROCESSORS_ONLN)
 
-FROM ubuntu:latest
+FROM ubuntu:20.04
 LABEL maintainer="Serg Podtynnyi <serg@podtynnyi.com>"
 
 RUN apt update && apt upgrade -y 
