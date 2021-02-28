@@ -38,11 +38,13 @@ RUN cd /usr/src/packages/hpt \
     && cd /usr/src/packages/hptutil && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/htick && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install 
 
+#rntrack build from mirrored svn github repo
 RUN git clone https://github.com/shtirlic/rntrack.git --depth 1 /usr/src/packages/rntrack \
     && cd /usr/src/packages/rntrack/MakeFiles/linux  && make install 
 
 FROM ubuntu:20.04
 LABEL maintainer="Serg Podtynnyi <serg@podtynnyi.com>"
+LABEL description="Full FTN bundle for FIDOnet and other networks. Inlcudes binkd, most packages of husky(hpt, htick, hptutil etc) and rntrack."
 
 RUN apt update && apt upgrade -y 
 
