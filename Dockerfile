@@ -14,7 +14,7 @@ RUN git clone https://github.com/pgul/binkd.git --depth 1 /usr/src/packages/bink
   && cd /usr/src/packages/binkd \
   && cp mkfls/unix/* . \
   && ./configure \
-  && make -j$(getconf _NPROCESSORS_ONLN)
+  && make install 
 
 #husky clone
 RUN git clone https://github.com/huskyproject/huskybse.git --depth 1 /usr/src/packages/huskybse \
@@ -46,8 +46,8 @@ LABEL maintainer="Serg Podtynnyi <serg@podtynnyi.com>"
 
 RUN apt update && apt upgrade -y 
 
-COPY --from=ftn-builder /usr/src/packages/binkd/binkd /usr/local/bin
 COPY --from=ftn-builder /usr/local/bin/* /usr/local/bin/
+COPY --from=ftn-builder /usr/local/sbin/binkd* /usr/local/bin/
 COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 
 WORKDIR /ftn
