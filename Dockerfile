@@ -55,7 +55,7 @@ COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 #Usec cron -f for run cronatab, for ex: every minute semc_check and everyhour touch poll
 COPY sem_check.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/sem_check.sh
-RUN echo "$CRONTAB_SRC" | crontab
+COPY crontab /etc/crontab
 
 WORKDIR /ftn
 VOLUME 	/ftn
