@@ -52,12 +52,12 @@ COPY --from=ftn-builder /usr/local/bin/* /usr/local/bin/
 COPY --from=ftn-builder /usr/local/sbin/binkd* /usr/local/bin/
 COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 
+#Usec cron -f for run cronatab, for ex: every minute semc_check and everyhour touch poll
 COPY sem_check.sh /usr/local/bin/
 RUN chmod u+x /usr/local/bin/sem_check.sh
+RUN cat $CRONTAB_SRC | crontab
 
 WORKDIR /ftn
 VOLUME 	/ftn
-
-
 
 EXPOSE 24554
