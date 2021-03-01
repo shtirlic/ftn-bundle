@@ -1,8 +1,8 @@
 #!/bin/bash
 
-HPT=/usr/local/bin/hpt -c ${HPT_CONFIG}
-BINKD=/usr/local/bin/binkd -n -q ${BINKD_UPLINKS} ${BINKD_CONFIG} 
-RNTRACK=/usr/local/bin/rntrack -c ${RNTRACK_CONFIG}
+HPT="/usr/local/bin/hpt -c ${HPT_CONFIG}"
+BINKD="/usr/local/bin/binkd -n -q ${BINKD_UPLINKS} ${BINKD_CONFIG}" 
+RNTRACK="/usr/local/bin/rntrack -c ${RNTRACK_CONFIG}"
 
 if [ -e ${HPT_ECHOTOSSLOG} ]
 then
