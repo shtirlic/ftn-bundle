@@ -46,12 +46,18 @@ FROM ubuntu:20.04
 LABEL maintainer="Serg Podtynnyi <serg@podtynnyi.com>"
 LABEL description="Full FTN bundle for FIDOnet and other networks. Inlcudes binkd, most packages of husky(hpt, htick, hptutil etc) and rntrack."
 
-RUN apt update && apt upgrade -y 
+RUN apt update && apt upgrade -y && apt install -y cron
 
 COPY --from=ftn-builder /usr/local/bin/* /usr/local/bin/
 COPY --from=ftn-builder /usr/local/sbin/binkd* /usr/local/bin/
 COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 
+COPY sem_check.sh /usr/local/bin/
+RUN chmod u+x /usr/local/bin/sem_check.sh
+
 WORKDIR /ftn
 VOLUME 	/ftn
+
+
+
 EXPOSE 24554
