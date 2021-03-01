@@ -1,0 +1,4 @@
+SHELL=/usr/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+*/15 * * * * root touch /ftn/node/tmp/poll > /proc/1/fd/1 2>/proc/1/fd/2
+*/1  * * * * root /usr/local/bin/sem_check.sh > /proc/1/fd/1 2>/proc/1/fd/2
