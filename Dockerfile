@@ -25,7 +25,9 @@ RUN git clone https://github.com/huskyproject/huskybse.git --depth 1 /usr/src/pa
   && git clone https://github.com/huskyproject/htick.git --depth 1 /usr/src/packages/htick \
   && git clone https://github.com/huskyproject/areafix.git --depth 1 /usr/src/packages/areafix \
   && git clone https://github.com/huskyproject/hptzip.git --depth 1 /usr/src/packages/hptzip \
-  && git clone https://github.com/huskyproject/hptutil.git --depth 1 /usr/src/packages/hptutil
+  && git clone https://github.com/huskyproject/hptutil.git --depth 1 /usr/src/packages/hptutil \
+  && git clone https://github.com/huskyproject/sqpack.git --depth 1 /usr/src/packages/sqpack \
+  && git clone https://github.com/huskyproject/nltools.git --depth 1 /usr/src/packages/nltools
 
 #husky build
 RUN cd /usr/src/packages/hpt \
@@ -36,7 +38,9 @@ RUN cd /usr/src/packages/hpt \
     && cd /usr/src/packages/hptzip && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/hpt && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/hptutil && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/htick && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install
+    && cd /usr/src/packages/htick && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+    && cd /usr/src/packages/sqpack && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+    && cd /usr/src/packages/nltools && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install
 
 #rntrack build from mirrored svn github repo
 RUN git clone https://github.com/shtirlic/rntrack.git --depth 1 /usr/src/packages/rntrack \
