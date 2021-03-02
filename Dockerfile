@@ -31,8 +31,8 @@ RUN git clone https://github.com/huskyproject/huskybse.git --depth 1 /usr/src/pa
 RUN cd /usr/src/packages/hpt \
     && cd /usr/src/packages/huskylib && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/smapi && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/areafix && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/fidoconf && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+    && cd /usr/src/packages/areafix && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/hptzip && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/hpt && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/hptutil && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
