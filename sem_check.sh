@@ -1,9 +1,10 @@
 #!/bin/bash
 
+# We need this to get all ENV set from pid 1 process
 . <(xargs -0 bash -c 'printf "export %q\n" "$@"' -- < /proc/1/environ)
 
 HPT="/usr/local/bin/hpt -c ${HPT_CONFIG}"
-BINKD="/usr/local/bin/binkd -n -q ${BINKD_UPLINKS} ${BINKD_CONFIG}" 
+BINKD="/usr/local/bin/binkd -n -q ${BINKD_UPLINKS} ${BINKD_CONFIG}"
 RNTRACK="/usr/local/bin/rntrack -c ${RNTRACK_CONFIG}"
 
 if [ -e ${HPT_ECHOTOSSLOG} ]
