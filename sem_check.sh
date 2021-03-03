@@ -21,6 +21,7 @@ then
     touch ${FLAGSDIR}/tossing
     rm -f ${BINKD_TOSS_FLAG}
     ${RNTRACK}
+    ${HPT} afix
     ${HPT} toss link
 #     ${HTICK} toss
     rm -f ${FLAGSDIR}/tossing
