@@ -6,6 +6,7 @@
 HPT="/usr/local/bin/hpt -c ${HPT_CONFIG}"
 BINKD="/usr/local/bin/binkd -n -q ${BINKD_UPLINKS} ${BINKD_CONFIG}"
 RNTRACK="/usr/local/bin/rntrack -c ${RNTRACK_CONFIG}"
+SQPACK="/usr/local/bin/sqpack -c ${HPT_CONFIG}"
 
 if [ -e ${HPT_ECHOTOSSLOG} ]
 then
@@ -45,5 +46,17 @@ then
     rm -f ${FLAGSDIR}/poll
     ${BINKD}
     rm -f ${FLAGSDIR}/polling
+  fi
+fi
+
+if [ -e ${FLAGSDIR}/housekeep ]
+then
+  if [ ! -e ${FLAGSDIR}/housekeeping ]
+  then
+    touch ${FLAGSDIR}/housekeeping
+    rm -f ${FLAGSDIR}/housekeep
+    ${SQPACK} *
+    ${HPT} qupd
+    rm -f ${FLAGSDIR}/housekeeping
   fi
 fi
