@@ -62,6 +62,8 @@ RUN chmod u+x /usr/local/bin/ftn_check.sh
 
 COPY crontab /etc/crontab
 
+RUN adduser --disabled-password --gecos '' ftn
+
 WORKDIR /ftn
 VOLUME 	/ftn
 
