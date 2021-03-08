@@ -3,10 +3,21 @@
 # We need this to get all ENV set from pid 1 process
 . <(xargs -0 bash -c 'printf "export %q\n" "$@"' -- < /proc/1/environ)
 
-HPT="/usr/local/bin/hpt -c ${HPT_CONFIG}"
-BINKD="/usr/local/bin/binkd -n -q ${BINKD_UPLINKS} ${BINKD_CONFIG}"
-RNTRACK="/usr/local/bin/rntrack -c ${RNTRACK_CONFIG}"
-SQPACK="/usr/local/bin/sqpack -c ${HPT_CONFIG}"
+SUDO="sudo -u ${FTNUSER}"
+HPT="${SUDO} /usr/local/bin/hpt -c ${HPT_CONFIG}"
+BINKD="${SUDO} /usr/local/bin/binkd -n ${BINKD_UPLINKS_POLL} ${BINKD_CONFIG}"
+RNTRACK="${SUDO} /usr/local/bin/rntrack -c ${RNTRACK_CONFIG}"
+SQPACK="${SUDO} /usr/local/bin/sqpack -c ${HPT_CONFIG}"
+
+if [ $1 = "poll" ]
+then
+  touch ${FLAGSDIR}/poll
+fi
+
+if [ $1 = "housekeep" ]
+then
+  touch ${FLAGSDIR}/housekeep
+fi
 
 if [ -e ${HPT_ECHOTOSSLOG} ]
 then

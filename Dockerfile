@@ -50,21 +50,34 @@ FROM ubuntu:20.04
 LABEL maintainer="Serg Podtynnyi <serg@podtynnyi.com>"
 LABEL description="Full FTN bundle for FIDOnet and other networks. Inlcudes binkd, most packages of husky(hpt, htick, hptutil etc) and rntrack."
 
-RUN apt update && apt upgrade -y && apt install -y cron
+RUN apt update && apt upgrade -y && apt install -y cron sudo
 
 COPY --from=ftn-builder /usr/local/bin/* /usr/local/bin/
 COPY --from=ftn-builder /usr/local/sbin/binkd* /usr/local/bin/
 COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 
-#Usec cron -f for run crontab, for ex: every minute semc_check and everyhour touch poll
-COPY ftn_check.sh /usr/local/bin/
-RUN chmod 755 /usr/local/bin/ftn_check.sh
-
-COPY crontab /etc/crontab
-
 RUN adduser --disabled-password --gecos '' ftn
 
 WORKDIR /ftn
 VOLUME 	/ftn
+
+ENV FTNUSER=${FTNUSER:-"ftn"}
+ENV FLAGSDIR=${FLAGSDIR:-"/ftn/node/tmp"}
+
+ENV BINKD_CONFIG=${BINKD_CONFIG:-"/ftn/binkd/binkd.conf"}
+ENV BINKD_UPLINKS_POLL=${BINKD_UPLINKS_POLL:-"-P 2:5030/3165"}
+ENV BINKD_TOSS_FLAG=${BINKD_TOSS_FLAG:-"/ftn/node/tmp/toss"}
+
+ENV HPT_CONFIG=${HPT_CONFIG:-"/ftn/hpt/hpt.conf"}
+ENV HPT_ECHOTOSSLOG=${HPT_ECHOTOSSLOG:-"/ftn/log/hpt-toss.log"}
+
+ENV RNTRACK_CONFIG=${RNTRACK_CONFIG:-"/ftn/rntrack/rntrack.cfg"}
+
+#Using cron -f for run crontab, for ex: every minute ftn_check and every hour touch poll
+COPY crontab /etc/crontab
+COPY ftn_check.sh /usr/local/bin/
+RUN chmod 755 /usr/local/bin/ftn_check.sh
+
+USER ${FTNUSER}
 
 EXPOSE 24554

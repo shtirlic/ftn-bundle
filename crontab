@@ -1,5 +1,5 @@
 SHELL=/usr/bin/bash
 PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-*/1  * * * * ftn ftn_check.sh > /proc/1/fd/1 2>/proc/1/fd/2
-*/30 * * * * ftn touch /ftn/node/tmp/poll > /proc/1/fd/1 2>/proc/1/fd/2
-1 */12 * * * ftn touch /ftn/node/tmp/housekeep > /proc/1/fd/1 2>/proc/1/fd/2
+*/1  * * * * root ftn_check.sh > /proc/1/fd/1 2>/proc/1/fd/2
+*/30 * * * * root ftn_check.sh poll > /proc/1/fd/1 2>/proc/1/fd/2
+1 */12 * * * root ftn_check.sh housekeep > /proc/1/fd/1 2>/proc/1/fd/2
