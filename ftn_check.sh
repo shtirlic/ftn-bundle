@@ -9,12 +9,12 @@ BINKD="${SUDO} /usr/local/bin/binkd -n ${BINKD_UPLINKS_POLL} ${BINKD_CONFIG}"
 RNTRACK="${SUDO} /usr/local/bin/rntrack -c ${RNTRACK_CONFIG}"
 SQPACK="${SUDO} /usr/local/bin/sqpack -c ${HPT_CONFIG}"
 
-if [ $1 = "poll" ]
+if [[ $1 == "poll" ]]
 then
   touch ${FLAGSDIR}/poll
 fi
 
-if [ $1 = "housekeep" ]
+if [[ $1 == "housekeep" ]]
 then
   touch ${FLAGSDIR}/housekeep
 fi
