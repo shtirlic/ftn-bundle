@@ -3,20 +3,21 @@ FROM ubuntu:20.04 as ftn-builder
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
+# Install depend
 RUN apt-get update && apt-get upgrade -y \
     && echo 'tzdata tzdata/Areas select Etc' | debconf-set-selections \
     && echo 'tzdata tzdata/Zones/Etc select UTC' | debconf-set-selections \
     && apt-get install -y git gcc g++ make cmake zlib1g-dev \
     && mkdir /usr/src/packages/
 
-#binkd build
+# Binkd build
 RUN git clone https://github.com/pgul/binkd.git --depth 1 /usr/src/packages/binkd  \
   && cd /usr/src/packages/binkd \
   && cp mkfls/unix/* . \
   && ./configure \
   && make install
 
-#husky clone
+# Husky clone
 RUN git clone https://github.com/huskyproject/huskybse.git --depth 1 /usr/src/packages/huskybse \
   && git clone https://github.com/huskyproject/huskylib.git --depth 1 /usr/src/packages/huskylib \
   && git clone https://github.com/huskyproject/smapi.git --depth 1 /usr/src/packages/smapi \
@@ -29,7 +30,7 @@ RUN git clone https://github.com/huskyproject/huskybse.git --depth 1 /usr/src/pa
   && git clone https://github.com/huskyproject/sqpack.git --depth 1 /usr/src/packages/sqpack \
   && git clone https://github.com/huskyproject/nltools.git --depth 1 /usr/src/packages/nltools
 
-#husky build
+# Husky build
 RUN cd /usr/src/packages/hpt \
     && cd /usr/src/packages/huskylib && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/smapi && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
@@ -42,7 +43,7 @@ RUN cd /usr/src/packages/hpt \
     && cd /usr/src/packages/sqpack && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
     && cd /usr/src/packages/nltools && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install
 
-#rntrack build from mirrored svn github repo
+# RNtrack builds from mirrored svn github repo
 RUN git clone https://github.com/shtirlic/rntrack.git --depth 1 /usr/src/packages/rntrack \
     && cd /usr/src/packages/rntrack/MakeFiles/linux  && make install
 
@@ -52,10 +53,12 @@ LABEL description="Full FTN bundle for FIDOnet and other networks. Inlcudes bink
 
 RUN apt update && apt upgrade -y && apt install -y cron sudo
 
+# Copy all binaries from build image
 COPY --from=ftn-builder /usr/local/bin/* /usr/local/bin/
 COPY --from=ftn-builder /usr/local/sbin/binkd* /usr/local/bin/
 COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 
+# We will use ftn user for all processe
 RUN adduser --disabled-password --gecos '' ftn
 
 WORKDIR /ftn
@@ -73,11 +76,11 @@ ENV HPT_ECHOTOSSLOG=${HPT_ECHOTOSSLOG:-"/ftn/log/hpt-toss.log"}
 
 ENV RNTRACK_CONFIG=${RNTRACK_CONFIG:-"/ftn/rntrack/rntrack.cfg"}
 
-#Using cron -f for run crontab, for ex: every minute ftn_check and every hour touch poll
+USER ${FTNUSER}
+
+# Using cron -f for run crontab, for ex: every minute ftn_check and every hour touch poll
 COPY crontab /etc/crontab
 COPY ftn_check.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/ftn_check.sh
-
-USER ${FTNUSER}
 
 EXPOSE 24554
