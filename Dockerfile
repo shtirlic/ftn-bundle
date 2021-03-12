@@ -76,11 +76,10 @@ ENV HPT_ECHOTOSSLOG=${HPT_ECHOTOSSLOG:-"/ftn/log/hpt-toss.log"}
 
 ENV RNTRACK_CONFIG=${RNTRACK_CONFIG:-"/ftn/rntrack/rntrack.cfg"}
 
-USER ${FTNUSER}
-
 # Using cron -f for run crontab, for ex: every minute ftn_check and every hour touch poll
 COPY crontab /etc/crontab
 COPY ftn_check.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/ftn_check.sh
 
+USER ${FTNUSER}
 EXPOSE 24554
