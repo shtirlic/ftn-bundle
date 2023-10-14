@@ -1,20 +1,20 @@
-FROM ubuntu:20.04 as ftn-builder
+FROM ubuntu:22.04 as ftn-builder
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
 
 # Install depend
 RUN apt-get update && apt-get upgrade -y \
-    && echo 'tzdata tzdata/Areas select Etc' | debconf-set-selections \
-    && echo 'tzdata tzdata/Zones/Etc select UTC' | debconf-set-selections \
-    && apt-get install -y git gcc g++ make cmake zlib1g-dev \
-    && mkdir /usr/src/packages/
+  && echo 'tzdata tzdata/Areas select Etc' | debconf-set-selections \
+  && echo 'tzdata tzdata/Zones/Etc select UTC' | debconf-set-selections \
+  && apt-get install -y git gcc g++ make cmake zlib1g-dev \
+  && mkdir /usr/src/packages/
 
 # Binkd build
 RUN git clone https://github.com/pgul/binkd.git --depth 1 /usr/src/packages/binkd  \
   && cd /usr/src/packages/binkd \
   && cp mkfls/unix/* . \
-  && ./configure \
+  && ./configure --with-af-force \
   && make install
 
 # Husky clone
@@ -26,28 +26,28 @@ RUN git clone https://github.com/huskyproject/huskybse.git --depth 1 /usr/src/pa
   && git clone https://github.com/huskyproject/htick.git --depth 1 /usr/src/packages/htick \
   && git clone https://github.com/huskyproject/areafix.git --depth 1 /usr/src/packages/areafix \
   && git clone https://github.com/huskyproject/hptzip.git --depth 1 /usr/src/packages/hptzip \
-  && git clone https://github.com/huskyproject/hptutil.git --depth 1 /usr/src/packages/hptutil \
-  && git clone https://github.com/huskyproject/sqpack.git --depth 1 /usr/src/packages/sqpack \
-  && git clone https://github.com/huskyproject/nltools.git --depth 1 /usr/src/packages/nltools
+  && git clone https://github.com/shtirlic/hptutil.git --depth 1 /usr/src/packages/hptutil \
+  && git clone https://github.com/shtirlic/sqpack.git --depth 1 /usr/src/packages/sqpack \
+  && git clone https://github.com/shtirlic/nltools.git --depth 1 /usr/src/packages/nltools
 
 # Husky build
 RUN cd /usr/src/packages/hpt \
-    && cd /usr/src/packages/huskylib && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/smapi && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/fidoconf && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/areafix && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/hptzip && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/hpt && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/hptutil && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/htick && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/sqpack && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
-    && cd /usr/src/packages/nltools && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install
+  && cd /usr/src/packages/huskylib  && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/smapi     && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/fidoconf  && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/areafix   && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/hptzip    && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/hpt       && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/htick     && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/hptutil   && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/sqpack    && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install \
+  && cd /usr/src/packages/nltools   && cmake -H. -Bbuild -DBUILD_SHARED_LIBS=OFF && cmake --build build --target install
 
-# RNtrack builds from mirrored svn github repo
-RUN git clone https://github.com/shtirlic/rntrack.git --depth 1 /usr/src/packages/rntrack \
-    && cd /usr/src/packages/rntrack/MakeFiles/linux  && make install
+# RNtrack build
+RUN git clone https://github.com/vasilyevmax/rntrack.git --depth 1 /usr/src/packages/rntrack \
+  && cd /usr/src/packages/rntrack/MakeFiles/linux  && make install
 
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 LABEL maintainer="Serg Podtynnyi <serg@podtynnyi.com>"
 LABEL description="Full FTN bundle for FIDOnet and other networks. Inlcudes binkd, most packages of husky(hpt, htick, hptutil etc) and rntrack."
 
@@ -58,13 +58,13 @@ COPY --from=ftn-builder /usr/local/bin/* /usr/local/bin/
 COPY --from=ftn-builder /usr/local/sbin/binkd* /usr/local/bin/
 COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 
-# We will use ftn user for all processe
-RUN adduser --disabled-password --gecos '' ftn
+# We will use ftn user for all processes
+ENV FTNUSER=${FTNUSER:-"ftn"}
+RUN adduser --disabled-password --gecos '' ${FTNUSER}
 
 WORKDIR /ftn
 VOLUME 	/ftn
 
-ENV FTNUSER=${FTNUSER:-"ftn"}
 ENV FLAGSDIR=${FLAGSDIR:-"/ftn/node/tmp"}
 
 ENV BINKD_CONFIG=${BINKD_CONFIG:-"/ftn/binkd/binkd.conf"}
