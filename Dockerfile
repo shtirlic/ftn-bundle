@@ -26,9 +26,9 @@ RUN git clone https://github.com/huskyproject/huskybse.git --depth 1 /usr/src/pa
   && git clone https://github.com/huskyproject/htick.git --depth 1 /usr/src/packages/htick \
   && git clone https://github.com/huskyproject/areafix.git --depth 1 /usr/src/packages/areafix \
   && git clone https://github.com/huskyproject/hptzip.git --depth 1 /usr/src/packages/hptzip \
-  && git clone https://github.com/shtirlic/hptutil.git --depth 1 /usr/src/packages/hptutil \
-  && git clone https://github.com/shtirlic/sqpack.git --depth 1 /usr/src/packages/sqpack \
-  && git clone https://github.com/shtirlic/nltools.git --depth 1 /usr/src/packages/nltools
+  && git clone https://github.com/huskyproject/hptutil.git --depth 1 /usr/src/packages/hptutil \
+  && git clone https://github.com/huskyproject/sqpack.git --depth 1 /usr/src/packages/sqpack \
+  && git clone https://github.com/huskyproject/nltools.git --depth 1 /usr/src/packages/nltools
 
 # Husky build
 RUN cd /usr/src/packages/hpt \
