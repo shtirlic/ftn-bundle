@@ -3,11 +3,10 @@
 # We need this to get all ENV set from pid 1 process
 . <(xargs -0 bash -c 'printf "export %q\n" "$@"' -- < /proc/1/environ)
 
-SUDO="sudo -u ${FTNUSER}"
-HPT="${SUDO} /usr/local/bin/hpt -c ${HPT_CONFIG}"
-BINKD="${SUDO} /usr/local/bin/binkd -n ${BINKD_UPLINKS_POLL} ${BINKD_CONFIG}"
-RNTRACK="${SUDO} /usr/local/bin/rntrack -c ${RNTRACK_CONFIG}"
-SQPACK="${SUDO} /usr/local/bin/sqpack -c ${HPT_CONFIG}"
+HPT="/usr/local/bin/hpt -c ${HPT_CONFIG}"
+BINKD="/usr/local/bin/binkd -n ${BINKD_UPLINKS_POLL} ${BINKD_CONFIG}"
+RNTRACK="/usr/local/bin/rntrack -c ${RNTRACK_CONFIG}"
+SQPACK="/usr/local/bin/sqpack -c ${HPT_CONFIG}"
 
 if [[ $1 == "poll" ]]
 then
@@ -42,7 +41,7 @@ fi
 
 # if [ -e ${FLAGSDIR}/tick ]
 # then
-#   ${SUDO} -u ${USER} ${HTICK} toss
+#   ${HTICK} toss
 #   chown -R ${USER}:${GROUP} ${FILEBASE}/*
 #   chmod 770 ${FILEBASE}/*
 #   chmod 660 ${FILEBASE}/*/*

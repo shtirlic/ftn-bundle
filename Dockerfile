@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 as ftn-builder
+FROM ubuntu:24.04 AS ftn-builder
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
@@ -58,10 +58,6 @@ COPY --from=ftn-builder /usr/local/bin/* /usr/local/bin/
 COPY --from=ftn-builder /usr/local/sbin/binkd* /usr/local/bin/
 COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 
-# We will use ftn user for all processes
-ENV FTNUSER=${FTNUSER:-"ftn"}
-RUN adduser --disabled-password --gecos '' ${FTNUSER}
-
 WORKDIR /ftn
 VOLUME 	/ftn
 
@@ -81,5 +77,5 @@ COPY crontab /etc/crontab
 COPY ftn_check.sh /usr/local/bin/
 RUN chmod 755 /usr/local/bin/ftn_check.sh
 
-USER ${FTNUSER}
+USER ubuntu
 EXPOSE 24554
