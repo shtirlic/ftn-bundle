@@ -1,5 +1,4 @@
-SHELL=/usr/bin/bash
-PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
-*/1  * * * * ubuntu ftn_check.sh > /proc/1/fd/1 2>/proc/1/fd/2
-*/30 * * * * ubuntu ftn_check.sh poll > /proc/1/fd/1 2>/proc/1/fd/2
-1 */12 * * * ubuntu ftn_check.sh housekeep > /proc/1/fd/1 2>/proc/1/fd/2
+*/1  * * * * /usr/local/bin/ftnctl.sh
+*/1  * * * * /usr/local/bin/ftnctl.sh export-env
+*/30 * * * * /usr/local/bin/ftnctl.sh poll
+1 */12 * * * /usr/local/bin/ftnctl.sh housekeep

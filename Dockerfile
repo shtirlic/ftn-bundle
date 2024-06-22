@@ -61,21 +61,20 @@ COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 WORKDIR /ftn
 VOLUME 	/ftn
 
-ENV FLAGSDIR=${FLAGSDIR:-"/ftn/node/tmp"}
-
-ENV BINKD_CONFIG=${BINKD_CONFIG:-"/ftn/binkd/binkd.conf"}
-ENV BINKD_UPLINKS_POLL=${BINKD_UPLINKS_POLL:-"-P 2:5030/3165"}
-ENV BINKD_TOSS_FLAG=${BINKD_TOSS_FLAG:-"/ftn/node/tmp/toss"}
-
-ENV HPT_CONFIG=${HPT_CONFIG:-"/ftn/hpt/hpt.conf"}
-ENV HPT_ECHOTOSSLOG=${HPT_ECHOTOSSLOG:-"/ftn/log/hpt-toss.log"}
-
-ENV RNTRACK_CONFIG=${RNTRACK_CONFIG:-"/ftn/rntrack/rntrack.cfg"}
+ENV FTN_FLAGSDIR=${FTN_FLAGSDIR:-"/ftn/node/tmp"}
+ENV FTN_BINKD_CONFIG=${FTN_BINKD_CONFIG:-"/ftn/binkd/binkd.conf"}
+ENV FTN_BINKD_UPLINKS_POLL=${FTN_BINKD_UPLINKS_POLL:-"-P 2:5030/3165"}
+ENV FTN_BINKD_TOSS_FLAG=${FTN_BINKD_TOSS_FLAG:-"/ftn/node/tmp/toss"}
+ENV FTN_HPT_CONFIG=${FTN_HPT_CONFIG:-"/ftn/hpt/hpt.conf"}
+ENV FTN_HPT_ECHOTOSSLOG=${FTN_HPT_ECHOTOSSLOG:-"/ftn/log/hpt-toss.log"}
+ENV FTN_RNTRACK_CONFIG=${FTN_RNTRACK_CONFIG:-"/ftn/rntrack/rntrack.cfg"}
 
 # Using cron -f for run crontab, for ex: every minute ftn_check and every hour touch poll
-COPY crontab /etc/crontab
-COPY ftn_check.sh /usr/local/bin/
-RUN chmod 755 /usr/local/bin/ftn_check.sh
+ADD crontab .
+RUN crontab -u ubuntu crontab
+COPY ftnctl.sh /usr/local/bin/
+RUN chmod 755 /usr/local/bin/ftnctl.sh
 
 USER ubuntu
 EXPOSE 24554
+ENTRYPOINT [ "ftnctl.sh" ]
