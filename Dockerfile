@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as ftn-builder
+FROM ubuntu:24.04 as ftn-builder
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV DEBCONF_NONINTERACTIVE_SEEN true
@@ -47,7 +47,7 @@ RUN cd /usr/src/packages/hpt \
 RUN git clone https://github.com/vasilyevmax/rntrack.git --depth 1 /usr/src/packages/rntrack \
   && cd /usr/src/packages/rntrack/MakeFiles/linux  && make install
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 LABEL maintainer="Serg Podtynnyi <serg@podtynnyi.com>"
 LABEL description="Full FTN bundle for FIDOnet and other networks. Inlcudes binkd, most packages of husky(hpt, htick, hptutil etc) and rntrack."
 
