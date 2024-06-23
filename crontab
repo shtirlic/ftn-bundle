@@ -1,4 +1,3 @@
 */1  * * * * /usr/local/bin/ftnctl.sh
-*/1  * * * * /usr/local/bin/ftnctl.sh export-env
 */30 * * * * /usr/local/bin/ftnctl.sh poll
 1 */12 * * * /usr/local/bin/ftnctl.sh housekeep

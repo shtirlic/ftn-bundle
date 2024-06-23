@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Actions for docker entrypoint or cron actions:
+#
+# cron - main scheduler
+# binkd-server or binkd - start binkd in server mode (node system)
+# binkd-client - start binkd in client only mode (point system)
+#
+
 # Main executables with params from ENV
 HPT="hpt -c ${FTN_HPT_CONFIG}"
 BINKD="binkd -n ${FTN_BINKD_UPLINKS_POLL} ${FTN_BINKD_CONFIG}"
@@ -34,13 +41,13 @@ fi
 
 # Actions called by cron
 
-# Toching poll flag
+# Touching poll flag
 if [[ $1 == "poll" ]]
 then
   touch ${FTN_FLAGSDIR}/poll
 fi
 
-# Toching housekeep flag
+# Touching housekeep flag
 if [[ $1 == "housekeep" ]]
 then
   touch ${FTN_FLAGSDIR}/housekeep

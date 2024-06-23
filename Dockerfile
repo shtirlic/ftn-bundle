@@ -61,15 +61,16 @@ COPY --from=ftn-builder /usr/bin/rntrack /usr/local/bin/
 WORKDIR /ftn
 VOLUME 	/ftn
 
-ENV FTN_FLAGSDIR=${FTN_FLAGSDIR:-"/ftn/node/tmp"}
+# Setting default ENV vars that must exist
+ENV FTN_FLAGSDIR=${FTN_FLAGSDIR:-"/ftn/spool/tmp"}
 ENV FTN_BINKD_CONFIG=${FTN_BINKD_CONFIG:-"/ftn/binkd/binkd.conf"}
 ENV FTN_BINKD_UPLINKS_POLL=${FTN_BINKD_UPLINKS_POLL:-"-P 2:5030/3165"}
-ENV FTN_BINKD_TOSS_FLAG=${FTN_BINKD_TOSS_FLAG:-"/ftn/node/tmp/toss"}
+ENV FTN_BINKD_TOSS_FLAG=${FTN_BINKD_TOSS_FLAG:-"/ftn/spool/tmp/toss"}
 ENV FTN_HPT_CONFIG=${FTN_HPT_CONFIG:-"/ftn/hpt/hpt.conf"}
 ENV FTN_HPT_ECHOTOSSLOG=${FTN_HPT_ECHOTOSSLOG:-"/ftn/log/hpt-toss.log"}
 ENV FTN_RNTRACK_CONFIG=${FTN_RNTRACK_CONFIG:-"/ftn/rntrack/rntrack.cfg"}
 
-# Using cron -f for run crontab, for ex: every minute ftn_check and every hour touch poll
+# Using cron to run custom crontab, for polls,toss,scan,housekeeping etc.
 ADD crontab .
 RUN crontab -u ubuntu crontab
 COPY ftnctl.sh /usr/local/bin/
