@@ -9,6 +9,7 @@
 
 # Main executables with params from ENV
 HPT="hpt -c ${FTN_HPT_CONFIG}"
+HTICK="htick -c ${FTN_HPT_CONFIG}"
 BINKD="binkd -n ${FTN_BINKD_UPLINKS_POLL} ${FTN_BINKD_CONFIG}"
 RNTRACK="rntrack -c ${FTN_RNTRACK_CONFIG}"
 SQPACK="sqpack -c ${FTN_HPT_CONFIG}"
@@ -53,7 +54,7 @@ then
   touch ${FTN_FLAGSDIR}/housekeep
 fi
 
-if [ -e ${FTN_HPT_ECHOTOSSLOG} ]
+if [ -f ${FTN_HPT_ECHOTOSSLOG} ]
 then
   ${RNTRACK}
   ${HPT} scan
@@ -61,16 +62,18 @@ then
 fi
 
 # Binkd traffic toss
-if [ -e ${FTN_BINKD_TOSS_FLAG} ]
+if [ -f ${FTN_BINKD_TOSS_FLAG} ]
 then
-  if [ ! -e ${FTN_FLAGSDIR}/tossing ]
+  if [ ! -f ${FTN_FLAGSDIR}/tossing ]
   then
     touch ${FTN_FLAGSDIR}/tossing
     rm -f ${FTN_BINKD_TOSS_FLAG}
     ${RNTRACK}
     ${HPT} afix
+    ${HTICK} scan
+    ${RNTRACK}
     ${HPT} toss link
-#     ${HTICK} toss
+    ${HTICK} toss
     rm -f ${FTN_FLAGSDIR}/tossing
   fi
 fi
@@ -85,9 +88,9 @@ fi
 # fi
 
 # Poll action
-if [ -e ${FTN_FLAGSDIR}/poll ]
+if [ -f ${FTN_FLAGSDIR}/poll ]
 then
-  if [ ! -e ${FTN_FLAGSDIR}/polling ]
+  if [ ! -f ${FTN_FLAGSDIR}/polling ]
   then
     touch ${FTN_FLAGSDIR}/polling
     rm -f ${FTN_FLAGSDIR}/poll
@@ -97,14 +100,15 @@ then
 fi
 
 # Housekeep action
-if [ -e ${FTN_FLAGSDIR}/housekeep ]
+if [ -f ${FTN_FLAGSDIR}/housekeep ]
 then
-  if [ ! -e ${FTN_FLAGSDIR}/housekeeping ]
+  if [ ! -f ${FTN_FLAGSDIR}/housekeeping ]
   then
     touch ${FTN_FLAGSDIR}/housekeeping
     rm -f ${FTN_FLAGSDIR}/housekeep
     ${SQPACK} *
     ${HPT} qupd
+    ${HTICK} clean
     rm -f ${FTN_FLAGSDIR}/housekeeping
   fi
 fi
