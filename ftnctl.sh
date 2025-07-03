@@ -18,21 +18,18 @@ SQPACK="sqpack -c ${FTN_HPT_CONFIG}"
 if [[ $1 == "cron" ]]
 then
   # Save ENV FTN_* vars for cron jobs
-  printenv | grep "FTN_" >> /etc/environment
+  printenv | grep "^FTN_" > /etc/environment
   exec cron -f
-  exit
 fi
 
 if [[ $1 == "binkd-server" || $1 == "binkd" ]]
 then
   exec binkd -C ${FTN_BINKD_CONFIG}
-  exit
 fi
 
 if [[ $1 == "binkd-client" ]]
 then
   exec binkd -c -C ${FTN_BINKD_CONFIG}
-  exit
 fi
 
 

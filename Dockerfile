@@ -1,7 +1,7 @@
 FROM ubuntu:24.04 AS ftn-builder
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV DEBCONF_NONINTERACTIVE_SEEN true
+ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NONINTERACTIVE_SEEN=true
 
 # Install depend
 RUN apt-get update && apt-get upgrade -y \
@@ -64,7 +64,7 @@ VOLUME 	/ftn
 # Setting default ENV vars that must exist
 ENV FTN_FLAGSDIR=${FTN_FLAGSDIR:-"/ftn/spool/tmp"}
 ENV FTN_BINKD_CONFIG=${FTN_BINKD_CONFIG:-"/ftn/binkd/binkd.conf"}
-ENV FTN_BINKD_UPLINKS_POLL=${FTN_BINKD_UPLINKS_POLL:-"-P 2:5030/3165"}
+ENV FTN_BINKD_UPLINKS_POLL=${FTN_BINKD_UPLINKS_POLL:-"-P2:5030/3165"}
 ENV FTN_BINKD_TOSS_FLAG=${FTN_BINKD_TOSS_FLAG:-"/ftn/spool/tmp/toss"}
 ENV FTN_HPT_CONFIG=${FTN_HPT_CONFIG:-"/ftn/hpt/hpt.conf"}
 ENV FTN_HPT_ECHOTOSSLOG=${FTN_HPT_ECHOTOSSLOG:-"/ftn/log/hpt-toss.log"}
